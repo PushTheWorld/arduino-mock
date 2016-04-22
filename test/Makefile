@@ -45,7 +45,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = Arduino_unittest Wire_unittest Serial_unittest Spark_unittest EEPROM_unittest WiFi_unittest serialHelper_unittest
+TESTS = Arduino_unittest Wire_unittest Serial_unittest Spark_unittest EEPROM_unittest WiFi_unittest serialHelper_unittest DSPI_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -179,6 +179,15 @@ WiFi_unittest.o : $(TEST_DIR)/WiFi_unittest.cc \
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/WiFi_unittest.cc
 
 WiFi_unittest : WiFi_unittest.o \
+				gmock_main.a  \
+				arduino_mock_all.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+DSPI_unittest.o : $(TEST_DIR)/DSPI_unittest.cc \
+				$(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/DSPI_unittest.cc
+
+DSPI_unittest : DSPI_unittest.o \
 				gmock_main.a  \
 				arduino_mock_all.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
